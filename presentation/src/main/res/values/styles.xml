@@ -11,4 +11,14 @@
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
+
+
+    <!-- Main Screen -->
+    <style name="StartWorkoutBtn">
+        <item name="android:layout_marginBottom">@dimen/start_workout_btn_margin_bottom</item>
+        <item name="android:background">@drawable/start_workout_btn</item>
+        <item name="android:textColor">@color/start_workout_btn_text_color</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
 </resources>

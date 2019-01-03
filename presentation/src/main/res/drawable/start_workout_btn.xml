@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="false" android:state_pressed="false">
+        <shape android:shape="oval">
+            <size android:width="@dimen/start_workout_btn_width" android:height="@dimen/start_workout_btn_height"/>
+
+            <gradient
+                android:startColor="@color/start_workout_btn_start_gradient_color"
+                android:centerColor="@color/start_workout_btn_center_gradient_color"
+                android:endColor="@color/start_workout_btn_end_gradient_color"
+                android:angle="0" />
+        </shape>
+    </item>
+
+    <item android:state_focused="false" android:state_pressed="true">
+        <shape android:shape="oval">
+            <size android:width="@dimen/start_workout_btn_width" android:height="@dimen/start_workout_btn_height"/>
+
+            <gradient
+                android:startColor="@color/start_workout_btn_start_gradient_color"
+                android:centerColor="@color/start_workout_btn_center_gradient_color"
+                android:endColor="@color/start_workout_btn_end_gradient_color"
+                android:angle="180" />
+        </shape>
+    </item>
+
+</selector>
