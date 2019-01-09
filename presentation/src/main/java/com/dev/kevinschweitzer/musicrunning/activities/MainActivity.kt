@@ -4,7 +4,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.dev.kevinschweitzer.musicrunning.R
 import com.dev.kevinschweitzer.musicrunning.di.DaggerModuleComponent
-import com.dev.kevinschweitzer.musicrunning.main.MainPresenter
+import com.dev.kevinschweitzer.musicrunning.mvp.main.MainPresenter
+import com.dev.kevinschweitzer.musicrunning.mvp.main.MainView
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -19,5 +20,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         //Automatically created by compilation using Component class name
         DaggerModuleComponent.create().inject(this)
+        presenter.init(MainView(this))
     }
 }

@@ -8,7 +8,7 @@
     tools:context=".activities.MainActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/start_workout_btn"
         style="@style/StartWorkoutBtn"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
