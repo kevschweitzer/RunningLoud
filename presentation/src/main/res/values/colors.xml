@@ -13,4 +13,7 @@
     <color name="main_bg_center_color">#203A43</color>
     <color name="main_bg_end_color">#2C5364</color>
 
+    <!--Workout Screen-->
+    <color name="workout_timer_color">#FFFFFF</color>
+
 </resources>

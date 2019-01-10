@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //Automatically created by compilation using Component class name
-        DaggerModuleComponent.create().inject(this)
+        DaggerModuleComponent.create().injectMain(this)
         presenter.init(MainView(this))
     }
 }

@@ -5,4 +5,10 @@
     <dimen name="start_workout_btn_width">175dp</dimen>
     <dimen name="start_workout_btn_height">125dp</dimen>
     <dimen name="start_workout_btn_margin_bottom">70dp</dimen>
+
+    <!-- Workout Screen -->
+    <dimen name="timer_text_size">60sp</dimen>
+    <dimen name="timer_margin_start">8dp</dimen>
+    <dimen name="timer_margin_end">8dp</dimen>
+    <dimen name="timer_margin_top">8dp</dimen>
 </resources>
