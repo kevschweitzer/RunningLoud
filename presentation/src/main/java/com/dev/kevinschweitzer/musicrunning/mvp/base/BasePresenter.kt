@@ -1,6 +1,8 @@
 package com.dev.kevinschweitzer.musicrunning.mvp.base
 
-abstract class BasePresenter {
+import java.io.Serializable
+
+abstract class BasePresenter: Serializable {
 
      lateinit var view: BaseView
 }
