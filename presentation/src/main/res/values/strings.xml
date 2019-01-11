@@ -8,4 +8,5 @@
     <string name="stop_confirmation_message">Sure you want to stop workout?</string>
     <string name="confirm_stop">Yes</string>
     <string name="decline_stop">No</string>
+    <string name="title_activity_map">Map</string>
 </resources>

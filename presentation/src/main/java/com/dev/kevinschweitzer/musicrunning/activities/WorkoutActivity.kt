@@ -23,6 +23,9 @@ class WorkoutActivity : AppCompatActivity() {
         presenter.init(WorkoutView(this))
     }
 
+    override fun onBackPressed() {
+        presenter.onBackPressed()
+    }
 
     companion object {
          fun getIntent(context: Context): Intent{

@@ -33,7 +33,7 @@ class WorkoutPresenter(workoutModel: WorkoutModel): BasePresenter() {
 
         stopButton.setOnClickListener {
             timer.cancel()
-            StopConfirmationDialog.newInstance(this).show(view.activity.supportFragmentManager, "")
+            stopWorkout()
         }
         pauseButton.setOnClickListener {
             if(!pauseButton.isPaused()){
@@ -51,5 +51,13 @@ class WorkoutPresenter(workoutModel: WorkoutModel): BasePresenter() {
         timer.scheduleAtFixedRate(timerTask {
             view.activity.timerTextView.text = model.getInstantTime()
         }, ONE_SECOND, ONE_SECOND)
+    }
+
+    fun onBackPressed() {
+        stopWorkout()
+    }
+
+    private fun stopWorkout() {
+        StopConfirmationDialog.newInstance(this).show(view.activity.supportFragmentManager, " ")
     }
 }
