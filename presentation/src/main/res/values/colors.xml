@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#f57c00</color>
+    <color name="colorPrimaryDark">#bb4d00</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!--Main Screen-->
+    <color name="start_workout_btn_text_color">#FFFFFF</color>
+    <color name="start_workout_btn_start_gradient_color">#f12011</color>
+    <color name="start_workout_btn_end_gradient_color">#f5af50</color>
+    <color name="start_workout_btn_center_gradient_color">@color/colorPrimary</color>
+    <color name="main_bg_start_color">#0F2027</color>
+    <color name="main_bg_center_color">#203A43</color>
+    <color name="main_bg_end_color">#2C5364</color>
+
+    <!--Workout Screen-->
+    <color name="workout_timer_color">#FFFFFF</color>
+
 </resources>

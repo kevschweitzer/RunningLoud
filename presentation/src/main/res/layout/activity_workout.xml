@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/MainScreen"
+    tools:context=".activities.WorkoutActivity">
+
+  <TextView
+      android:id="@+id/timerTextView"
+      style="@style/Timer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:text="@string/start_time_text"/>
+
+  <com.dev.kevinschweitzer.musicrunning.custom.PausedButton
+      android:id="@+id/pauseButton"
+      android:text="@string/pause_button_text"
+      android:textColor="@color/workout_timer_color"
+      android:layout_width="97dp"
+      android:layout_height="43dp"
+      app:layout_constraintStart_toStartOf="parent"
+      style="@style/PauseButton"
+      android:layout_marginStart="8dp"
+      android:layout_marginBottom="8dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:status="notPaused"/>
+
+  <Button
+      android:id="@+id/stopButton"
+      android:text="@string/stop_button_text"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:layout_marginEnd="8dp"
+      android:layout_marginBottom="8dp"
+      app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

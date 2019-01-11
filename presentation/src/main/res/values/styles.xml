@@ -11,4 +11,30 @@
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
+
+    <!-- Main Screen -->
+    <style name="MainScreen">
+        <item name="android:background">@drawable/main_background</item>
+    </style>
+
+    <style name="StartWorkoutBtn">
+        <item name="android:layout_marginBottom">@dimen/start_workout_btn_margin_bottom</item>
+        <item name="android:background">@drawable/start_workout_btn</item>
+        <item name="android:textColor">@color/start_workout_btn_text_color</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <!-- Workout Screen -->
+    <style name="Timer" parent="MainScreen">
+        <item name="android:textColor">@color/workout_timer_color</item>
+        <item name="android:textSize">@dimen/timer_text_size</item>
+        <item name="android:layout_marginStart">@dimen/timer_margin_start</item>
+        <item name="android:layout_marginEnd">@dimen/timer_margin_end</item>
+        <item name="android:layout_marginTop">@dimen/timer_margin_top</item>
+    </style>
+
+    <style name="PauseButton">
+        <item name="android:background">@color/colorAccent</item>
+    </style>
+
 </resources>
