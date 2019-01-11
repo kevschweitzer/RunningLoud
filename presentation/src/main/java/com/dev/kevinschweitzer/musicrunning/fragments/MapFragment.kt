@@ -21,85 +21,68 @@ import android.Manifest.permission.WRITE_CALENDAR
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Location
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.places.GeoDataClient
+import com.google.android.gms.location.places.PlaceDetectionClient
+import com.google.android.gms.location.places.Places
 
 
-
-
-
-class MapFragment: Fragment() {
+class MapFragment: Fragment(), OnMapReadyCallback {
 
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
+    private lateinit var mView: View
+    private lateinit var mGeoDataClient: GeoDataClient
+    private lateinit var mPlaceDetectionClient: PlaceDetectionClient
+    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.activity_map, container, false)
+        // Construct a GeoDataClient.
+        mGeoDataClient = Places.getGeoDataClient(activity as Activity, null);
 
-        mapView = rootView.findViewById(R.id.mapView) as MapView
-        mapView.onCreate(savedInstanceState)
+        // Construct a PlaceDetectionClient.
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(activity as Activity, null);
 
-        mapView.onResume() // needed to get the map to display immediately
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity as Activity);
+        mView = inflater.inflate(R.layout.fragment_map, container, false)
+        return mView
+    }
 
-        try {
-            MapsInitializer.initialize(activity!!.applicationContext)
-        } catch (e: Exception) {
-            e.printStackTrace()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        mapView = mView.findViewById(R.id.mapView)
+        mapView.let{
+            mapView.onCreate(null)
+            mapView.onResume()
+            mapView.getMapAsync(this)
+        }
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        MapsInitializer.initialize(context)
+        this.googleMap = googleMap
+
+        if ( ContextCompat.checkSelfPermission( activity as Activity, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+
+            ActivityCompat.requestPermissions( activity as Activity, Array<String>(1) {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
+                1 );
         }
 
+        googleMap.isMyLocationEnabled = true
 
-        mapView.getMapAsync{ mMap ->
-            googleMap = mMap
-
-
-            // For showing a move to my location button
-            var permissionCheck = ContextCompat.checkSelfPermission(
-                activity as Context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            if(permissionCheck == PackageManager.PERMISSION_DENIED){
-                ActivityCompat.requestPermissions( activity as Activity,  Array<String>(1) {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    1 )
-            }
-            permissionCheck = ContextCompat.checkSelfPermission(
-                activity as Context,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-
-            if(permissionCheck == PackageManager.PERMISSION_GRANTED){
-                googleMap.isMyLocationEnabled = true
-            }
-
-            // For dropping a marker at a point on the Map
-            val sydney = LatLng(-34.0, 151.0)
-            googleMap.addMarker(MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"))
-
-            // For zooming automatically to the location of the marker
-            val cameraPosition = CameraPosition.Builder().target(sydney).zoom(12f).build()
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-        }
-
-        return rootView
+        val sydney = LatLng(-34.0, 151.0)
+        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
 
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
-    }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
-    }
 
 }
