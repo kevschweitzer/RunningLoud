@@ -1,62 +1,48 @@
 package com.dev.kevinschweitzer.musicrunning.fragments
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dev.kevinschweitzer.musicrunning.R
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
+import kotlinx.android.synthetic.main.fragment_map.view.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.MapsInitializer
-import android.Manifest.permission
-import android.Manifest.permission.WRITE_CALENDAR
-import android.app.Activity
-import android.content.Context
-import android.content.pm.PackageManager
-import android.location.Location
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.places.GeoDataClient
-import com.google.android.gms.location.places.PlaceDetectionClient
-import com.google.android.gms.location.places.Places
+import com.google.android.gms.maps.model.LatLng
 
 
-class MapFragment: Fragment(), OnMapReadyCallback {
+
+
+class MapFragment: Fragment(), OnMapReadyCallback{
 
     private lateinit var mapView: MapView
     private lateinit var googleMap: GoogleMap
-    private lateinit var mView: View
-    private lateinit var mGeoDataClient: GeoDataClient
-    private lateinit var mPlaceDetectionClient: PlaceDetectionClient
-    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var inflatedView: View
+    private val LOCATION_REQUEST_CODE = 1
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val CITY_ZOOM: Float = 15f
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(activity as Activity, null);
-
-        // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(activity as Activity, null);
-
-        // Construct a FusedLocationProviderClient.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity as Activity);
-        mView = inflater.inflate(R.layout.fragment_map, container, false)
-        return mView
+        inflatedView = inflater.inflate(R.layout.fragment_map, container, false)
+        return inflatedView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        mapView = mView.findViewById(R.id.mapView)
+        mapView = inflatedView.mapView
         mapView.let{
             mapView.onCreate(null)
             mapView.onResume()
@@ -64,25 +50,47 @@ class MapFragment: Fragment(), OnMapReadyCallback {
         }
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        MapsInitializer.initialize(context)
-        this.googleMap = googleMap
+    @SuppressLint("MissingPermission")
+    override fun onMapReady(gmap: GoogleMap) {
+        googleMap = gmap
+        checkForPermissions()
 
-        if ( ContextCompat.checkSelfPermission( activity as Activity, android.Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-
-            ActivityCompat.requestPermissions( activity as Activity, Array<String>(1) {  android.Manifest.permission.ACCESS_COARSE_LOCATION  },
-                1 );
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity as Activity)
+        if(googleMap.isMyLocationEnabled){
+            fusedLocationClient.lastLocation
+                    .addOnSuccessListener { location : Location? ->
+                        location?.let {
+                            Log.i("Location Lat Long", it.latitude.toString() + " " +  it.longitude.toString())
+                            val current = LatLng(it.latitude, it.longitude)
+                            googleMap.addMarker(MarkerOptions().position(current))
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current,CITY_ZOOM))
+                        }
+                    }
         }
 
-        googleMap.isMyLocationEnabled = true
-
-        val sydney = LatLng(-34.0, 151.0)
-        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
     }
 
+    private fun checkForPermissions() {
+        if (ActivityCompat.checkSelfPermission(activity as Activity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(activity as Activity, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+          googleMap.isMyLocationEnabled = true
+        } else {
+            ActivityCompat.requestPermissions(activity as Activity, Array(1) { android.Manifest.permission.ACCESS_FINE_LOCATION }, LOCATION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(activity as Activity, Array(1) { android.Manifest.permission.ACCESS_COARSE_LOCATION }, LOCATION_REQUEST_CODE)
+        }
+    }
 
-
-
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            if(permissions.size == 1 &&
+                    permissions[0] == Manifest.permission.ACCESS_FINE_LOCATION &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                googleMap.isMyLocationEnabled = true
+            }
+        } else {
+            Log.i("Permissions","Don't have permissions")
+        }
+    }
 
 }

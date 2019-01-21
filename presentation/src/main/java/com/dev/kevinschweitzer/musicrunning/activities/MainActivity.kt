@@ -1,7 +1,7 @@
 package com.dev.kevinschweitzer.musicrunning.activities
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import com.dev.kevinschweitzer.musicrunning.R
 import com.dev.kevinschweitzer.musicrunning.di.DaggerModuleComponent
 import com.dev.kevinschweitzer.musicrunning.mvp.main.MainPresenter
@@ -22,4 +22,5 @@ class MainActivity : AppCompatActivity() {
         DaggerModuleComponent.create().injectMain(this)
         presenter.init(MainView(this))
     }
+
 }
