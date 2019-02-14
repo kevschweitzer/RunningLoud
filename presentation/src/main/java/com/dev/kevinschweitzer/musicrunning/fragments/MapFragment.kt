@@ -13,8 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.dev.kevinschweitzer.musicrunning.R
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -33,7 +32,10 @@ class MapFragment: Fragment(), OnMapReadyCallback{
     private lateinit var inflatedView: View
     private val LOCATION_REQUEST_CODE = 1
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var currentLocation: Location? = null
     private val CITY_ZOOM: Float = 15f
+    private lateinit var locationCallback: LocationCallback
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         inflatedView = inflater.inflate(R.layout.fragment_map, container, false)
@@ -48,6 +50,17 @@ class MapFragment: Fragment(), OnMapReadyCallback{
             mapView.onResume()
             mapView.getMapAsync(this)
         }
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations){
+                    val current = LatLng(location.latitude, location.longitude)
+                    googleMap.addMarker(MarkerOptions().position(current))
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current,CITY_ZOOM))
+                }
+            }
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -59,6 +72,7 @@ class MapFragment: Fragment(), OnMapReadyCallback{
         if(googleMap.isMyLocationEnabled){
             fusedLocationClient.lastLocation
                     .addOnSuccessListener { location : Location? ->
+                        currentLocation = location
                         location?.let {
                             Log.i("Location Lat Long", it.latitude.toString() + " " +  it.longitude.toString())
                             val current = LatLng(it.latitude, it.longitude)
@@ -67,7 +81,18 @@ class MapFragment: Fragment(), OnMapReadyCallback{
                         }
                     }
         }
+        fusedLocationClient.requestLocationUpdates(createLocationRequest(), locationCallback, null)
 
+    }
+
+    fun createLocationRequest(): LocationRequest? {
+        val locationRequest = LocationRequest.create()?.apply {
+            interval = 10000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        return locationRequest
     }
 
     private fun checkForPermissions() {

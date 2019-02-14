@@ -32,7 +32,6 @@ class WorkoutPresenter(workoutModel: WorkoutModel): BasePresenter() {
         stopButton = view.activity.stopButton
 
         stopButton.setOnClickListener {
-            timer.cancel()
             stopWorkout()
         }
         pauseButton.setOnClickListener {
@@ -58,6 +57,7 @@ class WorkoutPresenter(workoutModel: WorkoutModel): BasePresenter() {
     }
 
     private fun stopWorkout() {
+        timer.cancel()
         StopConfirmationDialog.newInstance(this).show(view.activity.supportFragmentManager, " ")
     }
 }
